@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>RestoApp · Sistema de Reservas</title>
+  <meta name="description" content="Panel de administración del sistema de reservas del restaurante con autenticación Google.">
+
+  <!-- Fuente -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Estilos -->
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- Google OAuth — debe cargarse antes del script principal -->
+  <script src="google-oauth.js"></script>
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar" aria-label="Menú lateral">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="ball"></div>
+        <span class="logo-text">RestoApp</span>
+      </div>
+    </div>
+
+    <div class="sidebar-user" id="sidebarUser">
+      <div class="avatar" id="userAvatar"><i class="fas fa-user"></i></div>
+      <div class="user-info">
+        <div class="user-name" id="userNameDisplay">—</div>
+        <div class="user-role" id="userRoleDisplay">—</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu" id="menuContainer" aria-label="Navegación principal">
+      <!-- inyectado por admin.js -->
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn" aria-label="Cerrar sesión">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== CONTENIDO PRINCIPAL ===== -->
+  <div class="main-content" id="mainContent">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+          <i class="fas fa-bars"></i>
+        </span>
+        <h3 id="viewTitle">Panel</h3>
+      </div>
+      <span class="role-badge" id="roleBadge">—</span>
+    </header>
+    <main class="page-content" id="pageContent">
+      <!-- vistas inyectadas por admin.js -->
+    </main>
+  </div>
+
+  <!-- ===== MODAL GENÉRICO ===== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modalContent">
+      <button class="close-modal" id="modalCloseBtn" aria-label="Cerrar modal">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Lógica principal -->
+  <script src="admin.js"></script>
+</body>
+</html>
