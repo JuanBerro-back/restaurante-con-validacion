@@ -636,14 +636,27 @@
           <div class="ball"></div>
           <span style="font-size:1.6rem;font-weight:700;color:var(--text-primary);">RestoApp</span>
         </div>
-        <p class="subtitle">Sistema de Reservas · Acceso con Google</p>
+        <p class="subtitle">Sistema de Reservas · Iniciar sesión</p>
+
         <div id="googleSignInDiv" style="display:flex;justify-content:center;"></div>
         <p class="login-hint" id="loginHint"></p>
+
+        <div class="login-divider"><span>o accede con tu correo</span></div>
+
+        <form id="localLoginForm" class="login-form" novalidate>
+          <label class="field-label" for="localEmail">Correo electrónico</label>
+          <input type="email" id="localEmail" class="login-input" placeholder="tu@correo.com" required autocomplete="email">
+          <label class="field-label" for="localName">Nombre (opcional)</label>
+          <input type="text" id="localName" class="login-input" placeholder="Tu nombre" autocomplete="name">
+          <button type="submit" class="login-submit">Entrar sin Google</button>
+        </form>
+
         ${isFile
           ? `<div class="alert-warning"><strong>⚠ Google OAuth no funciona con <code>file://</code></strong><br>
-               Usa un servidor local (Live Server en VS Code) o sube el proyecto a GitHub Pages.</div>`
+               Usa un servidor local (Live Server en VS Code) o sube el proyecto a GitHub Pages.<br>
+               <em>Puedes entrar con el formulario de correo de arriba.</em></div>`
           : `<div class="alert-info"><strong>Origen:</strong> <code>${Validate.escHtml(origin)}</code><br>
-               Si el botón no aparece, autoriza este origen en Google Cloud Console → Credenciales → <em>Orígenes autorizados</em>.</div>`}
+               Si el botón de Google no aparece, autoriza este origen en Google Cloud Console → Credenciales → <em>Orígenes autorizados</em>.</div>`}
       </div>`;
 
     dom.viewTitle.textContent = 'Inicio de sesión';
@@ -662,8 +675,48 @@
       });
     } else {
       const hint = document.getElementById('loginHint');
-      if (hint) hint.innerHTML = 'Google OAuth no disponible. Verifica que <code>google-oauth.js</code> se cargue correctamente.';
+      if (hint) hint.innerHTML = 'Google OAuth no disponible. Puedes usar el formulario de correo de abajo.';
     }
+
+    // Login LOCAL (sin Google) — alternativa que no depende de OAuth
+    const localForm = document.getElementById('localLoginForm');
+    localForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const emailInput = document.getElementById('localEmail');
+      const nameInput  = document.getElementById('localName');
+      const email = (emailInput.value || '').trim().toLowerCase();
+      const name  = (nameInput.value   || '').trim();
+
+      const hint = document.getElementById('loginHint');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (hint) hint.innerHTML = `<span style="color:var(--danger);">⚠ Ingresa un correo válido.</span>`;
+        emailInput.focus();
+        return;
+      }
+
+      currentUser = {
+        username:     name || email.split('@')[0],
+        email,
+        picture:      null,
+        rol:          roleFromEmail(email),
+        authProvider: 'local'
+      };
+      finishLogin();
+    });
+  }
+
+  async function finishLogin() {
+    try { await Crypto.generate(); } catch (e) { console.warn('Crypto:', e); }
+    await loadData();
+    sessionStorage.setItem('restoUser', JSON.stringify(currentUser));
+
+    const mainEl = document.getElementById('mainContent');
+    dom.sidebar.style.display = '';
+    Object.assign(mainEl.style, { marginLeft: '', display: '', alignItems: '', justifyContent: '' });
+
+    updateSidebarUser();
+    buildMenu();
+    renderView('dashboard');
   }
 
   /* ============================================================
@@ -682,18 +735,7 @@
       rol:          roleFromEmail(email),
       authProvider: 'google'
     };
-
-    try { await Crypto.generate(); } catch (e) { console.warn('Crypto:', e); }
-    await loadData();
-    sessionStorage.setItem('restoUser', JSON.stringify(currentUser));
-
-    const mainEl = document.getElementById('mainContent');
-    dom.sidebar.style.display = '';
-    Object.assign(mainEl.style, { marginLeft: '', display: '', alignItems: '', justifyContent: '' });
-
-    updateSidebarUser();
-    buildMenu();
-    renderView('dashboard');
+    finishLogin();
   }
 
   function updateSidebarUser() {

@@ -532,6 +532,66 @@ tbody tr:hover td      { background: #F8F9FF; }
 .alert-info code,
 .alert-warning code { background: rgba(0,0,0,0.08); padding: 1px 5px; border-radius: 4px; }
 
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 0;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #E5E7EB;
+}
+.login-form {
+  margin-top: 16px;
+  text-align: left;
+}
+.field-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 12px 0 6px;
+}
+.login-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #D1D5DB;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+.login-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+.login-submit {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.05s;
+}
+.login-submit:hover { background: var(--primary-dark, #1d4ed8); }
+.login-submit:active { transform: scale(0.99); }
+
 /* ============================================================
    ANIMACIONES
    ============================================================ */
