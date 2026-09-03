@@ -551,6 +551,34 @@ tbody tr:hover td      { background: #F8F9FF; }
   margin-top: 16px;
   text-align: left;
 }
+
+/* Botón propio "Continuar con Google" (no iframe) */
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow 0.15s, background 0.15s;
+  box-sizing: border-box;
+}
+.google-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+.google-btn:hover { background: #F9FAFB; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.google-btn:active { transform: scale(0.99); }
+
 .field-label {
   display: block;
   font-size: 0.78rem;
