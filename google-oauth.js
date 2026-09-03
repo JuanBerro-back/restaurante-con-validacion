@@ -200,6 +200,21 @@ const GoogleAuth = (function () {
           });
           console.info("[GoogleAuth] Botón renderizado. Origen actual:", origin);
           console.info("[GoogleAuth] Asegúrate de que este origen esté autorizado en Google Cloud Console -> Credenciales -> Orígenes de JavaScript autorizados.");
+
+          // GIS no valida el origen al llamar a renderButton: si el origen NO
+          // está autorizado en la credencial, el iframe del botón no se inyecta.
+          // Detectamos ese caso para mostrar un error claro en pantalla.
+          setTimeout(() => {
+            if (!container.querySelector('iframe')) {
+              const msg =
+                "Google no mostró el botón: el origen " + origin +
+                " no está autorizado en esta credencial. " +
+                "Ve a Google Cloud Console -> Credenciales -> (tu client " + CONFIG.CLIENT_ID + ") -> " +
+                "'Orígenes de JavaScript autorizados' y añade: " + origin;
+              console.error("[GoogleAuth] " + msg);
+              if (onLoginError) onLoginError(msg);
+            }
+          }, 1200);
         }
       }
 
