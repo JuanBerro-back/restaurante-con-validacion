@@ -651,12 +651,11 @@
           <button type="submit" class="login-submit">Entrar sin Google</button>
         </form>
 
-        ${isFile
+           ${isFile
           ? `<div class="alert-warning"><strong>⚠ Google OAuth no funciona con <code>file://</code></strong><br>
-               Usa un servidor local (Live Server en VS Code) o sube el proyecto a GitHub Pages.<br>
-               <em>Puedes entrar con el formulario de correo de arriba.</em></div>`
-          : `<div class="alert-info"><strong>Origen:</strong> <code>${Validate.escHtml(origin)}</code><br>
-               Si el botón de Google no aparece, autoriza este origen en Google Cloud Console → Credenciales → <em>Orígenes autorizados</em>.</div>`}
+            Usa un servidor local (Live Server en VS Code) o sube el proyecto a GitHub Pages.<br>
+            <em>Puedes entrar con el formulario de correo de arriba.</em></div>`
+          : ''}
       </div>`;
 
     dom.viewTitle.textContent = 'Inicio de sesión';
