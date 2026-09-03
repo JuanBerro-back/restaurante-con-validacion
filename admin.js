@@ -776,7 +776,7 @@
       try {
         const u = JSON.parse(storedUser);
         if (u.authProvider === 'google' && window.GoogleAuth) {
-          const payload = GoogleAuth.restoreSession();
+          const payload = await GoogleAuth.restoreSession();
           if (payload) {
             await Crypto.load();
             currentUser = u;

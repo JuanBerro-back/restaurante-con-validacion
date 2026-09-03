@@ -1,0 +1,8 @@
+# Credenciales y secretos de Google (NUNCA subir al repositorio)
+client_secret_*.json
+*client_secret*.json
+*.apps.googleusercontent.com.json
+
+# Artículos de autenticación legacy / no utilizados
+auth (1).js
+auth.js

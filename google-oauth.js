@@ -28,7 +28,7 @@ const GoogleAuth = (function () {
   "use strict";
 
   const CONFIG = {
-    CLIENT_ID: "314982404694-eumgjj46g3j23gpjfqn56i2qo04lj2cv.apps.googleusercontent.com",
+    CLIENT_ID: "61510338551-29nagua32pgrm0j3ckjo6b3d550jkcgl.apps.googleusercontent.com",
     GIS_SRC: "https://accounts.google.com/gsi/client",
     SCOPES: "openid email profile", // scopes de identidad (OIDC)
   };
@@ -94,6 +94,9 @@ const GoogleAuth = (function () {
       const info = await res.json();
       if (info.aud !== CONFIG.CLIENT_ID) {
         return { valid: false, reason: "El token no fue emitido para esta aplicación" };
+      }
+      if (String(info.email_verified) !== "true") {
+        return { valid: false, reason: "El correo de Google no está verificado" };
       }
       return { valid: true, info };
     } catch (e) {
@@ -213,15 +216,31 @@ const GoogleAuth = (function () {
   }
 
   // ---------- 7. Restaurar sesión existente (si no expiró) ----------
-  function restoreSession() {
+  // Revalida el token guardado contra los servidores de Google (firma y
+  // estado del correo), siguiendo el patrón revalidateSession del módulo auth.
+  async function restoreSession() {
     try {
-      const raw = sessionStorage.getItem("googleAuthSession");
-      if (!raw) return null;
-      const session = JSON.parse(raw);
+      let session;
+      try {
+        session = JSON.parse(sessionStorage.getItem("googleAuthSession"));
+      } catch {
+        session = null;
+      }
+      if (!session || !session.idToken) return null;
       if (!session.expiresAt || session.expiresAt < Date.now()) {
         sessionStorage.removeItem("googleAuthSession");
         return null;
       }
+
+      const verification = await verifyIdToken(session.idToken);
+      if (!verification.valid) {
+        // El token dejó de ser válido (expiró, se revocó o el correo dejó de
+        // estar verificado): limpiar la sesión en lugar de restaurarla.
+        sessionStorage.removeItem("googleAuthSession");
+        currentSession = null;
+        return null;
+      }
+
       currentSession = session;
       return session.payload;
     } catch {
